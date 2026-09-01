@@ -67,6 +67,12 @@
 
             <!-- Right Nav Actions -->
             <div class="flex items-center gap-3 sm:gap-4">
+                <a href="#products-section" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-brand-700 px-3 py-2 rounded-xl hover:bg-slate-100 transition">
+                    <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <span>Scrap Rates</span>
+                </a>
                 <a href="{{ route('collectors.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white font-semibold text-sm transition-all shadow-md shadow-brand-600/20 hover:shadow-lg hover:shadow-brand-600/30 hover:-translate-y-0.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
@@ -336,6 +342,87 @@
             </button>
         </div>
 
+        <!-- Scrap Products & Market Rates Catalog Section -->
+        <div id="products-section" class="mt-16 scroll-mt-24">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200/80 text-brand-700 text-xs font-bold uppercase tracking-wider mb-2">
+                        ♻️ Market Rates Catalog
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                        Accepted <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-teal-600">Scrap Materials & Rates</span>
+                    </h2>
+                    <p class="text-slate-500 text-sm mt-1">Explore current market pricing guidelines for recyclable materials accepted across our network.</p>
+                </div>
+
+                @auth
+                    <a href="{{ route('admin.products.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition shadow-sm">
+                        <span>Manage Products in Admin</span> &rarr;
+                    </a>
+                @endauth
+            </div>
+
+            <!-- Products Grid -->
+            @if(isset($products) && count($products) > 0)
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach ($products as $product)
+                        <div class="bg-white rounded-2xl p-5 border border-emerald-100/80 shadow-xs hover:shadow-xl hover:shadow-brand-950/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+                            <!-- Subtle Top Hover Line -->
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                            <div>
+                                <!-- Image & Badges -->
+                                <div class="relative w-full h-44 rounded-xl overflow-hidden mb-4 bg-slate-100 border border-slate-100">
+                                    @if ($product->image)
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    @else
+                                        <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100 text-slate-400">
+                                            <svg class="w-8 h-8 mb-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            <span class="text-[11px] font-semibold text-slate-500">Recyclable Material</span>
+                                        </div>
+                                    @endif
+
+                                    <!-- Category Pill -->
+                                    <div class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-emerald-300 text-[11px] font-bold border border-white/10">
+                                        {{ $product->category }}
+                                    </div>
+                                </div>
+
+                                <!-- Title & Description -->
+                                <h3 class="font-bold text-base text-slate-900 group-hover:text-brand-700 transition-colors mb-1">
+                                    {{ $product->product_name }}
+                                </h3>
+                                <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                                    {{ $product->description }}
+                                </p>
+                            </div>
+
+                            <!-- Footer Price Row -->
+                            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Benchmark Rate</span>
+                                <div class="inline-flex items-center gap-1 text-brand-700 font-extrabold text-sm bg-brand-50 px-2.5 py-1 rounded-lg border border-brand-200/60">
+                                    <span>${{ number_format($product->price, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="py-12 text-center bg-white rounded-3xl border border-dashed border-slate-200 p-8">
+                    <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 mx-auto flex items-center justify-center mb-3">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mb-1">Scrap Material Rates Coming Soon</h3>
+                    <p class="text-slate-500 text-xs max-w-md mx-auto">Material listings and standard pricing rates are currently being updated.</p>
+                </div>
+            @endif
+        </div>
+
         <!-- Join Banner Callout -->
         <div class="mt-16 bg-gradient-to-r from-brand-50 via-emerald-50 to-teal-50 rounded-3xl p-8 sm:p-10 border border-brand-200/60 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="max-w-xl text-center md:text-left">
@@ -365,6 +452,8 @@
             <p class="text-slate-400">Promoting Eco-Friendly Scrap Collection & Recycling</p>
         </div>
     </footer>
+
+
 
     <!-- Client-Side Search & Filter JavaScript -->
     <script>
@@ -441,5 +530,7 @@
             });
         }
     </script>
+
+    
 </body>
 </html>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Collector;
+use App\Models\Product;
 use Illuminate\View\View;
 
 class CollectorController extends Controller
@@ -11,7 +12,8 @@ class CollectorController extends Controller
     public function index()
     {
         $collectors = Collector::where('is_verified',true)->latest()->get();
-        return View('collectors.index',compact('collectors'));
+        $products = Product::latest()->get();
+        return View('collectors.index',compact('collectors','products'));
     }
      public function create()
      {
