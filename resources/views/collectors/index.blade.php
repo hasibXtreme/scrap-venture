@@ -259,7 +259,7 @@
                             <!-- Avatar -->
                             <div class="shrink-0 relative">
                                 @if($collector->picture)
-                                    <img src="{{ asset('storage/' . $collector->picture) }}" alt="{{ $collector->name }}" class="w-20 h-20 rounded-2xl object-cover shadow-sm ring-4 ring-slate-100/80 group-hover:ring-brand-100 transition-all">
+                                    <img src="{{  $collector->picture }}" alt="{{ $collector->name }}" class="w-20 h-20 rounded-2xl object-cover shadow-sm ring-4 ring-slate-100/80 group-hover:ring-brand-100 transition-all">
                                 @else
                                     <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-500 to-teal-700 text-white font-extrabold text-2xl flex items-center justify-center shadow-sm ring-4 ring-slate-100/80 group-hover:ring-brand-100 transition-all">
                                         {{ strtoupper(substr($collector->name, 0, 1)) }}

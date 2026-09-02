@@ -164,7 +164,7 @@
                             <tr class="hover:bg-amber-50/30 transition">
                                 <td class="py-4 px-6">
                                     @if($collector->picture)
-                                        <img src="{{ asset('storage/' . $collector->picture) }}" alt="{{ $collector->name }}" class="w-12 h-12 rounded-xl object-cover shadow-xs border border-slate-200">
+                                        <img src="{{  $collector->picture }}" alt="{{ $collector->name }}" class="w-12 h-12 rounded-xl object-cover shadow-xs border border-slate-200">
                                     @else
                                         <div class="w-12 h-12 bg-slate-200 text-slate-600 rounded-xl flex items-center justify-center font-bold">
                                             {{ strtoupper(substr($collector->name, 0, 1)) }}

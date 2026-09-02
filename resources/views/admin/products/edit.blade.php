@@ -144,7 +144,7 @@
                     
                     <div class="flex items-center gap-4">
                         @if ($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="Current Image" class="w-20 h-20 rounded-xl object-cover border border-slate-200 shadow-xs">
+                            <img src="{{ $product->image }}" alt="Current Image" class="w-20 h-20 rounded-xl object-cover border border-slate-200 shadow-xs">
                         @else
                             <div class="w-20 h-20 rounded-xl bg-slate-200 flex items-center justify-center text-slate-400 text-xs font-semibold">
                                 No Image

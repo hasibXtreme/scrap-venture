@@ -7,7 +7,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\View\View;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 class ProductController extends Controller
 {
 
@@ -35,7 +35,9 @@ class ProductController extends Controller
         $imagepath = null;
         if($request->hasFile('image'))
             {
-                $imagepath = $request->file('image')->store('products','public');
+                $imagepath=Cloudinary::upload($request->file('image')->getRealPath(),[
+                    'folder'=>'products',
+                ])->getRealPath();
             }
 
         Product::create([
@@ -51,9 +53,9 @@ class ProductController extends Controller
 
     public function productdlt(Product $product)
     {
-        if($product->image && Storage::disk('public')->exists($product->image))
+        if($product->image)
             {
-                Storage::disk('public')->delete($product->image);
+                Cloudinary::destroy($product->image);
             }
         $product->delete();
         return redirect()->back()->with('success','product deleted');
@@ -78,12 +80,19 @@ class ProductController extends Controller
         if($request->hasFile('image'))
             {
                
-                if($product->image && Storage::disk('public')->exists($product->image))
+                if($product->image)
                     {
-                        Storage::disk('public')->delete($product->image);
+                        Cloudinary::destroy($product->image);
                     }
-                $validated['image']= $request->file('image')->store('products','public') ;
+                $validated['image']= Cloudinary::upload($request->file('image')->getRealPath(),[
+                    'folder'=>'products',
+                ])->getRealPath(); 
             }
+
+            else 
+                {
+                    unset($validated['image']);
+                }
 
             $product->update($validated);
 

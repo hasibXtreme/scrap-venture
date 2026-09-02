@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Collector;
 use App\Models\Product;
 use Illuminate\View\View;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class CollectorController extends Controller
 {
@@ -33,7 +34,9 @@ class CollectorController extends Controller
 
         if($request->hasFile('picture'))
             {
-             $imagepath = $request->file('picture')->store('collectors','public');
+             $imagepath = Cloudinary::upload($request->file('image')->getRealPath(),[
+                    'folder'=>'products',
+                ])->getRealPath();
             }
 
             Collector::create(
@@ -64,6 +67,10 @@ class CollectorController extends Controller
 
      public function destroy(Collector $collector)
      {
+        if($collector->picture)
+            {
+                Cloudinary::destroy($collector->picture);
+            }
         $collector->delete();
         return redirect()->back()->with('success','collector is not accepted');
      }
