@@ -34,8 +34,8 @@ class CollectorController extends Controller
 
         if($request->hasFile('picture'))
             {
-             $imagepath = Cloudinary::upload($request->file('image')->getRealPath(),[
-                    'folder'=>'products',
+             $imagepath = Cloudinary::upload($request->file('picture')->getRealPath(),[
+                    'folder'=>'collectors',
                 ])->getRealPath();
             }
 
