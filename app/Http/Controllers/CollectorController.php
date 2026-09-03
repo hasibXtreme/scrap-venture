@@ -34,9 +34,10 @@ class CollectorController extends Controller
 
         if($request->hasFile('picture'))
             {
-             $imagepath = Cloudinary::upload($request->file('picture')->getRealPath(),[
-                    'folder'=>'collectors',
-                ])->getSecurePath();
+                $uploaded = Cloudinary::uploadApi()->upload($request->file('picture')->getRealPath(), [
+                    'folder' => 'collectors',
+                ]);
+                $imagepath = $uploaded['secure_url'] ?? null;
             }
 
             Collector::create(
@@ -69,7 +70,10 @@ class CollectorController extends Controller
      {
         if($collector->picture)
             {
-                Cloudinary::destroy($collector->picture);
+                try {
+                    $publicId = pathinfo(parse_url($collector->picture, PHP_URL_PATH), PATHINFO_FILENAME);
+                    Cloudinary::uploadApi()->destroy('collectors/' . $publicId);
+                } catch (\Exception $e) {}
             }
         $collector->delete();
         return redirect()->back()->with('success','collector is not accepted');

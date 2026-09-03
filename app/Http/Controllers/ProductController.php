@@ -37,9 +37,10 @@ class ProductController extends Controller
         $imagepath = null;
         if($request->hasFile('image'))
             {
-                $imagepath=Cloudinary::upload($request->file('image')->getRealPath(),[
-                    'folder'=>'products',
-                ])->getSecurePath();
+                $uploaded = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
+                    'folder' => 'products',
+                ]);
+                $imagepath = $uploaded['secure_url'] ?? null;
             }
 
         Product::create([
@@ -57,7 +58,10 @@ class ProductController extends Controller
     {
         if($product->image)
             {
-                Cloudinary::destroy($product->image);
+                try {
+                    $publicId = pathinfo(parse_url($product->image, PHP_URL_PATH), PATHINFO_FILENAME);
+                    Cloudinary::uploadApi()->destroy('products/' . $publicId);
+                } catch (\Exception $e) {}
             }
         $product->delete();
         return redirect()->back()->with('success','product deleted');
@@ -81,14 +85,17 @@ class ProductController extends Controller
         
         if($request->hasFile('image'))
             {
-               
                 if($product->image)
                     {
-                        Cloudinary::destroy($product->image);
+                        try {
+                            $publicId = pathinfo(parse_url($product->image, PHP_URL_PATH), PATHINFO_FILENAME);
+                            Cloudinary::uploadApi()->destroy('products/' . $publicId);
+                        } catch (\Exception $e) {}
                     }
-                $validated['image']= Cloudinary::upload($request->file('image')->getRealPath(),[
-                    'folder'=>'products',
-                ])->getSecurePath(); 
+                $uploaded = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
+                    'folder' => 'products',
+                ]);
+                $validated['image'] = $uploaded['secure_url'] ?? null;
             }
 
             else 
