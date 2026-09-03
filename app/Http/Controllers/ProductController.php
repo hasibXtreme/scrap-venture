@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\View\View;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 class ProductController extends Controller
 {
 
@@ -22,6 +23,7 @@ class ProductController extends Controller
    {
      return View('admin.products.create');
    }
+
     public function productinput(Request $request)
     {
         $validated = $request->validate([
@@ -98,8 +100,4 @@ class ProductController extends Controller
 
             return redirect()->route('admin.products.index')->with('success','product deleted');
     }
-
-
-
-    
 }
