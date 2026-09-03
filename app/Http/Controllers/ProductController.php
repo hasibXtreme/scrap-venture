@@ -39,7 +39,7 @@ class ProductController extends Controller
             {
                 $imagepath=Cloudinary::upload($request->file('image')->getRealPath(),[
                     'folder'=>'products',
-                ])->getRealPath();
+                ])->getSecurePath();
             }
 
         Product::create([
@@ -88,7 +88,7 @@ class ProductController extends Controller
                     }
                 $validated['image']= Cloudinary::upload($request->file('image')->getRealPath(),[
                     'folder'=>'products',
-                ])->getRealPath(); 
+                ])->getSecurePath(); 
             }
 
             else 

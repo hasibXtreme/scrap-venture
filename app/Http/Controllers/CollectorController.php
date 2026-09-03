@@ -36,7 +36,7 @@ class CollectorController extends Controller
             {
              $imagepath = Cloudinary::upload($request->file('picture')->getRealPath(),[
                     'folder'=>'collectors',
-                ])->getRealPath();
+                ])->getSecurePath();
             }
 
             Collector::create(
