@@ -41,12 +41,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy composer files and install dependencies first (cached Docker layer)
+# Copy composer files and install dependencies (using --no-scripts because artisan is copied in next step)
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-progress --no-interaction --optimize-autoloader
+RUN composer install --no-dev --no-scripts --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
 # Copy application source code
 COPY . .
+
+# Discover Laravel packages now that application source code (artisan) exists
+RUN composer dump-autoload --optimize --no-dev
 
 # Copy built assets from Node stage
 COPY --from=node_builder /app/public/build ./public/build
