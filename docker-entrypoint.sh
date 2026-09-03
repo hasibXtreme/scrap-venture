@@ -2,9 +2,9 @@
 set -e
 
 # Cache configuration, routes, and views for performance
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
 
 # Execute migrations if requested or by default
 if [ "$RUN_MIGRATIONS" != "false" ]; then
