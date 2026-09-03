@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: scrap-venture
+    runtime: docker
+    plan: free
+    envVars:
+      - key: APP_NAME
+        value: "Scrap Venture"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_SSLMODE
+        value: require
+      - key: FILESYSTEM_DISK
+        value: cloudinary
