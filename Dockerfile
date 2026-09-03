@@ -4,12 +4,13 @@ WORKDIR /app
 COPY package*.json vite.config.js ./
 COPY resources ./resources
 COPY public ./public
-RUN npm install && npm run build
+RUN npm ci --prefer-offline || npm install
+RUN npm run build
 
 # Stage 2: Production PHP-FPM + Nginx application
 FROM php:8.2-fpm-alpine
 
-# Install system dependencies and PHP extension installer
+# Install system dependencies
 RUN apk add --no-cache \
     nginx \
     bash \
@@ -40,14 +41,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+# Copy composer files and install dependencies first (cached Docker layer)
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
 # Copy application source code
 COPY . .
 
 # Copy built assets from Node stage
 COPY --from=node_builder /app/public/build ./public/build
-
-# Install production PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Copy Nginx configuration
 COPY nginx.conf /etc/nginx/http.d/default.conf
