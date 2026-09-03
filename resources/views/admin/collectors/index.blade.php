@@ -250,7 +250,7 @@
                             <tr class="hover:bg-slate-50 transition">
                                 <td class="py-4 px-6">
                                     @if($collector->picture)
-                                        <img src="{{ asset('storage/' . $collector->picture) }}" alt="{{ $collector->name }}" class="w-10 h-10 rounded-xl object-cover shadow-xs border border-slate-200">
+                                        <img src="{{ \Illuminate\Support\Str::startsWith($collector->picture, ['http://', 'https://']) ? $collector->picture : asset('storage/' . $collector->picture) }}" alt="{{ $collector->name }}" class="w-10 h-10 rounded-xl object-cover shadow-xs border border-slate-200">
                                     @else
                                         <div class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center font-bold text-xs">
                                             {{ strtoupper(substr($collector->name, 0, 1)) }}
